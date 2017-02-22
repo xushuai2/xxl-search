@@ -175,6 +175,10 @@ public class ElasticsearchUtil {
 	 * @return
 	 */
 	public static IndexResponse prepareIndex(String index, String type, @Nullable String id, Map source){
+
+		// 索引模板
+		// getInstance().admin().indices()
+
 		IndexResponse response = getInstance().prepareIndex(index, type, id).setSource(source).get();
 		return response;
 	}
