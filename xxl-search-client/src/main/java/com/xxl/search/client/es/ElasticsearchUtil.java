@@ -122,6 +122,7 @@ import java.util.*;
 			- 模糊查询（fuzzyQuery/prefixQuery）：TextField；如商户名搜索，不太准确；
 			- 地理查询（geoDistanceQuery）：如附近的商家；
 			- 范围查询（rangeQuery）：如年龄；
+			- 嵌套查询（new NestedQueryBuilder(nq.getPath(), nestedBoolBuilder);）
 			- Bool查询/组合查询（QueryBuilders.boolQuery()）；must="与"+相关性分析、filter模式="与"、mustNot=非、should="或"、
 			- 查询字段（earchRequest.setFetchSource("List")）；
 			- 排序    (SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);)
