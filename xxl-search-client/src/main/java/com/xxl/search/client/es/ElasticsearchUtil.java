@@ -116,12 +116,18 @@ import java.util.*;
 		- 3、删除一条索引
 		- 4、清空索引
 		- 5、查询: (至少一个查询条件,如根据城市等, 至少一个排序条件,如时间戳等)
-			- 精确查询, IntField/StringField;   (QueryBuilders.termQuery("group", "group"))
-			- 分词查询, TextField       (QueryBuilders.fuzzyQuery("shopname", "10"))
-			- 范围查询, 针对同一个Field支持重复设置query, SHOULD模式, 实现范围查询   (QueryBuilders.termsQuery("cityid", Arrays.asList(1,2)))
-			- 关联查询, 支持针对多个Filed, 设置query list, MUST模式, 实现关联查询   (BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();)
-			- 分页    (.setFrom(offset).setSize(pagesize))
+			- 精确查询-单个（QueryBuilders.termQuery("field", "value")）： IntField/StringField;
+			- 精确查询-范围（QueryBuilders.termQuery("field", List)）： IntField/StringField; 针对同一个Field设置LIST精确值；
+			- 分词查询（matchQuery）：如商户名搜索，会分词，比较准确；
+			- 模糊查询（fuzzyQuery/prefixQuery）：TextField；如商户名搜索，不太准确；
+			- 地理查询（geoDistanceQuery）：如附近的商家；
+			- 范围查询（rangeQuery）：如年龄；
+			- Bool查询/组合查询（QueryBuilders.boolQuery()）；must="与"+相关性分析、filter模式="与"、mustNot=非、should="或"、
+			- 查询字段（earchRequest.setFetchSource("List")）；
 			- 排序    (SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);)
+			- 分页    (.setFrom(offset).setSize(pagesize))
+			- 查询超时（.get(Timeout)）：
+		- 6、索引别名：为索引建立别名、方便索引迁移，结构变更；
 	</pre>
  */
 public class ElasticsearchUtil {
