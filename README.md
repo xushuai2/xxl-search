@@ -29,7 +29,7 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 #### 1.3 下载
 源码地址 (将会在两个git仓库同步发布最新代码)
 - [github地址](https://github.com/xuxueli/xxl-search)
-- [git.oschina地址](https://git.oschina.net/xuxueli0323/xxl-search)
+- [gitee地址](https://gitee.com/xuxueli0323/xxl-search)
 
 博客地址
 - [oschina地址](https://my.oschina.net/xuxueli/blog/751759)
