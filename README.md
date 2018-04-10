@@ -1,10 +1,15 @@
-# 《搜索应用参考示例XXL-SEARCH》
+## 《搜索应用参考示例XXL-SEARCH》
+
+[![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-search.svg)](https://github.com/xuxueli/xxl-search/releases)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+
 ## 一、简介
 
-#### 1.1 概述
+### 1.1 概述
 XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索应用参考示例，是索引搜索世界中的主流技术选型，最佳实践的总结与演示。
 
-#### 1.2 特性
+### 1.2 特性
 - 1、Quickstart：一个完整的 "搜索列表页" 演示应用，演示搜索的开发和使用的完整流程。
 
 	《演示功能列表》
@@ -26,20 +31,20 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 - 2、多种方案：目前演示项目, 基于 "lucene、elasticsearch" 两种方案分别进行演示了开发流程。
 - 3、"搜索小程序", 基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
 
-#### 1.3 下载
-源码地址 (将会在两个git仓库同步发布最新代码)
-- [github地址](https://github.com/xuxueli/xxl-search)
-- [gitee地址](https://gitee.com/xuxueli0323/xxl-search)
+### 1.3 下载
 
-博客地址
-- [oschina地址](https://my.oschina.net/xuxueli/blog/751759)
-- [cnblog地址](http://www.cnblogs.com/xuxueli/p/5910165.html)
+#### 源码仓库地址
 
-##### 技术交流群 (仅作技术交流)
+源码仓库地址 | Release Download
+--- | ---
+[https://github.com/xuxueli/xxl-search](https://github.com/xuxueli/xxl-search) | [Download](https://github.com/xuxueli/xxl-search/releases)
+[https://gitee.com/xuxueli0323/xxl-search](https://gitee.com/xuxueli0323/xxl-search) | [Download](https://gitee.com/xuxueli0323/xxl-search/releases)  
 
+
+#### 技术交流
 - [社区交流](http://www.xuxueli.com/page/community.html)
 
-#### 1.4 环境
+### 1.4 环境
 - Maven3+
 - Jdk1.7+
 - Tomcat7+
@@ -48,8 +53,9 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 - Elasticsearch2+
 
 
-### 二、用例演示
-##### 源码目录介绍
+## 二、用例演示
+
+### 源码目录介绍
 
     - /xxl-search-client    : "xxl-search-example" 依赖的搜索核心包, 内置lucene、elasticsearch 两种搜索实现方案;
     - /xxl-search-example   : "搜索列表页" 演示项目, 基于 "xxl-search-client" 实现;
@@ -65,7 +71,7 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 
 >基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
 
-##### 1、"搜索列表页" 演示项目
+### 1、"搜索列表页" 演示项目
 
 见项目 "xxl-search-example"
 
@@ -111,7 +117,7 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
         3、"标签" 复选框: 将会跟选中标签绑定的商户;
         4、"排序" 单选框: 将会选中排序字段进行商户排序;
 
-##### 2、"搜索小程序" 项目
+### 2、"搜索小程序" 项目
 
 见项目 "xxl-search-example" 
 
@@ -155,11 +161,13 @@ XXL-SEARCH 是以 "lucene/elasticsearch" 为核心的，Pragmatic风格的搜索
 mvn dependency:copy-dependencies -DoutputDirectory=lib   -DincludeScope=compile
 ```
 
-### 三、技术实现
-#### Lucene & Elasticsearch
+## 三、技术实现
+
+### Lucene & Elasticsearch
+
 
 ## 四、历史版本
-#### 1.2 特性
+### 1.2 特性
 - 1、Quickstart：一个完整的 "搜索列表页" 演示应用，演示搜索的开发和使用的完整流程。
 
 	《演示功能列表》
@@ -181,11 +189,22 @@ mvn dependency:copy-dependencies -DoutputDirectory=lib   -DincludeScope=compile
 - 2、多种方案：目前演示项目, 基于 "lucene、elasticsearch" 两种方案分别进行演示了开发流程。
 - 3、"搜索小程序", 基于Lucene实现, 可以生成 "索引库文件", copy该文件至任何系统, 可嵌入式的增加系统的搜索功能;
 
-#### 规划中
+### TODO
 - 1、新增 solr 搜索方案;
 - 2、新增 IK 等分词器支持;
 - 3、底层API封装优化;
 
 ## 五、其他
-#### 5.1 报告问题
-XXL-GLUE托管在Github上，如有问题可在 [ISSUES](https://github.com/xuxueli/xxl-search/issues) 上提问，也可以加入上文技术交流群；
+
+### 5.1 项目贡献
+欢迎参与项目贡献！比如提交PR修复一个bug，或者新建 [Issue](https://github.com/xuxueli/xxl-search/issues/) 讨论新特性或者变更。
+
+### 5.2 开源协议和版权
+产品开源免费，并且将持续提供免费的社区技术支持。个人或企业内部可自由的接入和使用。
+
+- Licensed under the GNU General Public License (GPL) v3.
+- Copyright (c) 2015-present, xuxueli.
+
+---
+### 捐赠
+无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
