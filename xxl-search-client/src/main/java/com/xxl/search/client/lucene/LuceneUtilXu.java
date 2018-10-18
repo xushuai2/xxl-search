@@ -346,7 +346,7 @@ public class LuceneUtilXu {
 	
 	
 	public static void main(String[] args) throws Exception {
-//			dodo();
+//			add();
 		select();
 	}
 
@@ -363,7 +363,7 @@ public class LuceneUtilXu {
 	/**
 	 * 
 	 */
-	private static void dodo() {
+	private static void add() {
 		Document doc = new Document();
 		doc.add(new IntField("id",1, Field.Store.YES));
 		doc.add(new IntField("cityid", 1, Field.Store.YES));
