@@ -1,7 +1,16 @@
 package com.xxl.search.client.es;
 
-import com.xxl.search.client.es.response.SearchResult;
-import com.xxl.search.client.util.PropertiesUtil;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -24,9 +33,8 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.*;
+import com.xxl.search.client.es.response.SearchResult;
+import com.xxl.search.client.util.PropertiesUtil;
 
 /**
  * Elasticsearch 工具类
@@ -347,6 +355,82 @@ public class ElasticsearchUtil {
     	String index = "demo-index";
     	String type = "shop";
 
+//		add(index, type);
+
+		// 更新
+//		update(index, type);
+
+		// 删除
+//		delete(index, type);
+
+		// 搜索
+//        search(index, type,5,2);
+//        search(index, type,4,2);
+//        System.out.println("*******************************");
+        search(index, type,0,10);
+		
+	}
+
+	/**
+	 * @param index
+	 * @param type
+	 */
+	private static void search(String index, String type,int offset,int pageSize) {
+		List<QueryBuilder> queryBuilders = new ArrayList<>();
+        //queryBuilders.add(QueryBuilders.termQuery("group", "group"));
+        //queryBuilders.add(QueryBuilders.termsQuery("cityid", Arrays.asList(1,2)));
+        //queryBuilders.add(QueryBuilders.fuzzyQuery("group", "g11roup"));
+        queryBuilders.add(QueryBuilders.termsQuery("group", "group"));
+
+        SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);
+
+		SearchResult searchResponse = prepareSearch(index, type, queryBuilders, sort, offset, pageSize);
+
+        System.out.println("-----------------");
+		for (Map<String, Object> item: searchResponse.getData()) {
+			System.out.println(item);
+		}
+	}
+
+	/**
+	 * @param index
+	 * @param type
+	 */
+	private static void delete(String index, String type) {
+		int idDel = 2;
+		prepareDelete(index, type, idDel+"");
+
+		System.out.println(prepareGet(index, type, idDel+"").getSource());
+	}
+
+	/**
+	 * @param index
+	 * @param type
+	 */
+	private static void update(String index, String type) {
+		int id = 1;
+		
+		System.out.println(prepareGet(index, type, id+"").getSource());
+		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", id);
+        map.put("cityid", 2);
+        map.put("shopname", "南京"+id);
+        map.put("group", Arrays.asList("group", "group2"));
+        map.put("score", 5000+id);
+        map.put("hotscore", 5000-id);
+//        prepareIndex(index, type, id+"", map);
+		prepareUpdate(index, type, id+"", map);
+
+		System.out.println(prepareGet(index, type, id+"").getSource());
+	}
+
+	/**
+	 * @param index
+	 * @param type
+	 */
+	private static void add(String index, String type) {
 		// 创建索引
 		for (int id = 1; id <= 10; id++) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -361,42 +445,6 @@ public class ElasticsearchUtil {
 		}
 
 		System.out.println(prepareGet(index, type, 1+"").getSource());
-
-		// 更新
-		int id = 1;
-		Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", id);
-        map.put("cityid", 2);
-        map.put("shopname", "上海"+id);
-        map.put("group", Arrays.asList("group", "group2"));
-        map.put("score", 5000+id);
-        map.put("hotscore", 5000-id);
-        prepareIndex(index, type, id+"", map);
-		prepareUpdate(index, type, id+"", map);
-
-		System.out.println(prepareGet(index, type, id+"").getSource());
-
-		// 删除
-		id = 2;
-		prepareDelete(index, type, id+"");
-
-		System.out.println(prepareGet(index, type, id+"").getSource());
-
-		// 搜索
-        List<QueryBuilder> queryBuilders = new ArrayList<>();
-        //queryBuilders.add(QueryBuilders.termQuery("group", "group"));
-        //queryBuilders.add(QueryBuilders.termsQuery("cityid", Arrays.asList(1,2)));
-        //queryBuilders.add(QueryBuilders.fuzzyQuery("group", "g11roup"));
-        queryBuilders.add(QueryBuilders.termsQuery("group", "group"));
-
-        SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);
-
-		SearchResult searchResponse = prepareSearch(index, type, queryBuilders, sort, 0, 100);
-
-        System.out.println("---");
-		for (Map<String, Object> item: searchResponse.getData()) {
-			System.out.println(item);
-		}
 	}
     
 }
