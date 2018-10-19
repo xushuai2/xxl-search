@@ -1,24 +1,46 @@
 package com.xxl.search.client.lucene;
 
-import com.xxl.search.client.lucene.response.SearchResult;
-import com.xxl.search.client.util.PropertiesUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
-import org.apache.lucene.search.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.BytesRefBuilder;
-import org.apache.lucene.util.NumericUtils;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DocValuesType;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TrackingIndexWriter;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.ControlledRealTimeReopenThread;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.SearcherFactory;
+import org.apache.lucene.search.SearcherManager;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.util.BytesRefBuilder;
+import org.apache.lucene.util.NumericUtils;
+
+import com.xxl.search.client.lucene.response.SearchResult;
+import com.xxl.search.client.util.PropertiesUtil;
 
 /**
  * Lucene工具类 (文章标题/内容,分词索引)
@@ -91,6 +113,7 @@ public class LuceneUtil {
 
 	private static Directory directory = null;
 	private static IndexWriter indexWriter = null;
+	
 	private static SearcherManager searcherManager = null;
 	static {	init();	}
 	private static void init() {
@@ -108,9 +131,18 @@ public class LuceneUtil {
 				IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 				indexWriter = new IndexWriter(directory, indexWriterConfig);
 
+				
+/*				lucene提供了SearcherManager extends ReferenceManager<IndexSearcher>管理IndexReader的重建和关闭，保证了线程安全，封装了IndexSearcher的生成。主要提供如下三个接口：
+
+				acquire获取当前已打开的最新IndexSearcher
+				release释放不用的引用，本质调的是IndexReader.close()，当一个IndexReader内部的引用计数为0时，会关闭自己释放资源。
+				maybeRefresh，尝试打开新的IndexReader，本质调用的是DirectoryReader.openIfChanged*/
 				// SearcherManager
 				searcherManager = new SearcherManager(indexWriter, false, new SearcherFactory());
+				//TrackingIndexWriter判断是否有人等待？
 				TrackingIndexWriter trackingIndexWriter = new TrackingIndexWriter(indexWriter);
+				
+				////单位秒
 				ControlledRealTimeReopenThread controlledRealTimeReopenThread = new ControlledRealTimeReopenThread<IndexSearcher>(trackingIndexWriter, searcherManager, 5.0, 0.025);
 				controlledRealTimeReopenThread.setDaemon(true);//设为后台进程
 				controlledRealTimeReopenThread.start();
@@ -229,8 +261,6 @@ public class LuceneUtil {
 			if (queries!=null && queries.size()>0) {
 				for (Query query: queries) {
 					booleanBuild.add(query, BooleanClause.Occur.MUST);
-					// new TermQuery(new Term("key", "value"));
-					// NumericRangeQuery.newIntRange("key", value, value, true, true);
 				}
 			}
 			BooleanQuery booleanQuery = booleanBuild.build();
@@ -238,8 +268,9 @@ public class LuceneUtil {
 			// TopFieldCollector
 			TopFieldCollector topFieldCollector = TopFieldCollector.create(sort, offset+pagesize, false, false, false);
 
-			// IndexSearcher
+			// IndexSearcher尝试打开新的IndexReader，本质调用的是DirectoryReader.openIfChanged
 			searcherManager.maybeRefresh();
+			//获取当前已打开的最新IndexSearcher
 			indexSearcher =  searcherManager.acquire();
 
 			// search
