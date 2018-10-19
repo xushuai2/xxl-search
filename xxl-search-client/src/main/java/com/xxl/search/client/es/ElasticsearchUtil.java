@@ -17,6 +17,7 @@ import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -159,6 +160,7 @@ public class ElasticsearchUtil {
 					String host = temp[0];
 					int port = Integer.valueOf(temp[1]);
 					transportAddresses[i] = new InetSocketTransportAddress(InetAddress.getByName(host), port);
+					i++;
 				}
 
 				// Settings
@@ -196,6 +198,28 @@ public class ElasticsearchUtil {
 
 		IndexResponse response = getInstance().prepareIndex(index, type, id).setSource(source).get();
 		return response;
+	}
+	
+	/**
+	 * 批量新增索引
+	 * @param index
+	 * @param type
+	 * @param id
+	 * @param sources
+	 */
+	public static void prepareBatchIndex(String index, String type, List<Map> sources){
+		// 批量创建索引
+		BulkRequestBuilder bulkRequest = getInstance().prepareBulk();
+		IndexRequest request = null;
+		for(Map source:sources){
+			request = getInstance().prepareIndex(index, type, source.get("id").toString()).setSource(source).request();
+			bulkRequest.add(request);
+		}
+		BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+		if (bulkResponse.hasFailures()) {
+			System.out.println("批量创建索引错误！");
+		}
+		System.out.println("批量创建索引成功");
 	}
 
 	/**
@@ -355,7 +379,9 @@ public class ElasticsearchUtil {
     	String index = "demo-index";
     	String type = "shop";
 
-//		add(index, type);
+		add(index, type);
+		
+//		addBatch(index, type);
 
 		// 更新
 //		update(index, type);
@@ -367,7 +393,7 @@ public class ElasticsearchUtil {
 //        search(index, type,5,2);
 //        search(index, type,4,2);
 //        System.out.println("*******************************");
-        search(index, type,0,10);
+//        search(index, type,0,10);
 		
 	}
 
@@ -431,20 +457,46 @@ public class ElasticsearchUtil {
 	 * @param type
 	 */
 	private static void add(String index, String type) {
+		type = "xushuaiType";
+		long starttime = System.currentTimeMillis();
 		// 创建索引
-		for (int id = 1; id <= 10; id++) {
+		//-----------------------500000-------add花费时间：(s)=2691
+		for (int id = 1; id <= 1000; id++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", id);
 			map.put("cityid", 1);
 			map.put("shopname", "北京"+id);
-			map.put("group", "group");
+			map.put("group", "group"+id);
             map.put("score", 5000+id);
-            map.put("hotscore", 5000-id);
+            map.put("hotscore", 5000+id);
 
 			prepareIndex(index, type, id+"", map);
 		}
-
-		System.out.println(prepareGet(index, type, 1+"").getSource());
+		long endtime = System.currentTimeMillis();
+		System.out.println("------------------------------add花费时间：(s)="+(endtime-starttime)/1000);
+//		System.out.println(prepareGet(index, type, 1+"").getSource());
+	}
+	
+	private static void addBatch(String index, String type) {
+		long starttime = System.currentTimeMillis();
+		// 创建索引
+		//-----------------------500000-------add花费时间：(s)=2691
+		List<Map> sources = new ArrayList<>();
+		for (int id = 500001; id <= 500999; id++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", id);
+			map.put("cityid", 1);
+			map.put("shopname", "北京"+id);
+			map.put("group", "group"+id);
+            map.put("score", 5000+id);
+            map.put("hotscore", 5000+id);
+            sources.add(map);
+		}
+		
+		prepareBatchIndex(index, type,sources);
+		long endtime = System.currentTimeMillis();
+		System.out.println("------------------------------add花费时间：(s)="+(endtime-starttime)/1000);
+//		System.out.println(prepareGet(index, type, 1+"").getSource());
 	}
     
 }
