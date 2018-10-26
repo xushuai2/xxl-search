@@ -376,10 +376,14 @@ public class ElasticsearchUtil {
 			 - 排序
      */
 	public static void main(String[] args) {
-    	String index = "demo-index";
-    	String type = "shop";
+//    	String index = "xs";
+//    	String type = "xushuaiType";
 
-		add(index, type);
+    	
+    	
+    	String index = "xs2";
+    	String type = "xu2";
+//		add(index, type);
 		
 //		addBatch(index, type);
 
@@ -390,7 +394,7 @@ public class ElasticsearchUtil {
 //		delete(index, type);
 
 		// 搜索
-//        search(index, type,5,2);
+        search(index, type,0,2);
 //        search(index, type,4,2);
 //        System.out.println("*******************************");
 //        search(index, type,0,10);
@@ -403,10 +407,10 @@ public class ElasticsearchUtil {
 	 */
 	private static void search(String index, String type,int offset,int pageSize) {
 		List<QueryBuilder> queryBuilders = new ArrayList<>();
-        //queryBuilders.add(QueryBuilders.termQuery("group", "group"));
+        queryBuilders.add(QueryBuilders.termQuery("group", "group84"));
         //queryBuilders.add(QueryBuilders.termsQuery("cityid", Arrays.asList(1,2)));
         //queryBuilders.add(QueryBuilders.fuzzyQuery("group", "g11roup"));
-        queryBuilders.add(QueryBuilders.termsQuery("group", "group"));
+//        queryBuilders.add(QueryBuilders.termsQuery("group", "group84"));
 
         SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);
 
@@ -457,7 +461,6 @@ public class ElasticsearchUtil {
 	 * @param type
 	 */
 	private static void add(String index, String type) {
-		type = "xushuaiType";
 		long starttime = System.currentTimeMillis();
 		// 创建索引
 		//-----------------------500000-------add花费时间：(s)=2691

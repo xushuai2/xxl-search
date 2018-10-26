@@ -1,9 +1,15 @@
 package com.xxl.search.example.controller;
 
-import com.xxl.search.client.lucene.LuceneUtil;
-import com.xxl.search.client.util.PropertiesUtil;
-import com.xxl.search.example.core.model.ShopDTO;
-import com.xxl.search.example.service.IXxlSearchService;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -11,13 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
+import com.xxl.search.client.util.PropertiesUtil;
+import com.xxl.search.example.core.model.ShopDTO;
+import com.xxl.search.example.service.IXxlSearchService;
 
-/**
- * Created by xuxueli on 16/7/30.
- */
 
 @Controller
 public class DemoController {
@@ -65,7 +68,7 @@ public class DemoController {
         shopOriginMap.put(100011, new ShopDTO(100011, "沙县小吃", ShopDTO.CityEnum.SHENZHEN.cityid, Arrays.asList(ShopDTO.TagEnum.TAG01.tagid), 50, 95));
 
         // 清空索引库
-        LuceneUtil.deleteAll();
+        //LuceneUtil.deleteAll();
     }
 
     /**
