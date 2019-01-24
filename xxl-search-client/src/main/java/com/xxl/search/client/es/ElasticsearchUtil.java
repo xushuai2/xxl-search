@@ -394,7 +394,7 @@ public class ElasticsearchUtil {
 //		delete(index, type);
 
 		// 搜索
-        search(index, type,0,2);
+        search(index, type,0,20);
 //        search(index, type,4,2);
 //        System.out.println("*******************************");
 //        search(index, type,0,10);
@@ -407,9 +407,9 @@ public class ElasticsearchUtil {
 	 */
 	private static void search(String index, String type,int offset,int pageSize) {
 		List<QueryBuilder> queryBuilders = new ArrayList<>();
-        queryBuilders.add(QueryBuilders.termQuery("group", "group84"));
+//        queryBuilders.add(QueryBuilders.termQuery("group", "group84"));
         //queryBuilders.add(QueryBuilders.termsQuery("cityid", Arrays.asList(1,2)));
-        //queryBuilders.add(QueryBuilders.fuzzyQuery("group", "g11roup"));
+        queryBuilders.add(QueryBuilders.fuzzyQuery("group", "group"));
 //        queryBuilders.add(QueryBuilders.termsQuery("group", "group84"));
 
         SortBuilder sort = SortBuilders.fieldSort("score").order(SortOrder.DESC);
